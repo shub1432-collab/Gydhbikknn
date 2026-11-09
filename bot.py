@@ -50,10 +50,10 @@ BUY_BUTTON_TEXT = "👑 Buy Premium Access 🔥"
 # TELEGRAM GROUP CONFIG
 # =========================================================
 
-START_GROUP_ID = int(os.getenv("START_GROUP_ID", "--1004492866489"))
+START_GROUP_ID = int(os.getenv("START_GROUP_ID", "-1004492866489"))
 START_PINNED_MESSAGE_ID = int(os.getenv("START_PINNED_MESSAGE_ID", "2"))
 
-DEMO_GROUP_ID = int(os.getenv("DEMO_GROUP_ID", "--1004469438880"))
+DEMO_GROUP_ID = int(os.getenv("DEMO_GROUP_ID", "-1004469438880"))
 DEMO_PINNED_MESSAGE_ID = int(os.getenv("DEMO_PINNED_MESSAGE_ID", "2"))
 
 
