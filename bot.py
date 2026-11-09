@@ -303,11 +303,19 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return ConversationHandler.END
 
     if query.data == "back_main":
-        await query.edit_message_text(
-            text="👇 **अपना option चुनें:**",
-            reply_markup=main_menu(),
-            parse_mode="Markdown"
-        )
+        try:
+            await query.edit_message_text(
+                text="👇 **अपना option चुनें:**",
+                reply_markup=main_menu(),
+                parse_mode="Markdown"
+            )
+        except Exception:
+            await context.bot.send_message(
+                chat_id=user_chat_id,
+                text="👇 **अपना option चुनें:**",
+                reply_markup=main_menu(),
+                parse_mode="Markdown"
+            )
         return ConversationHandler.END
 
 
