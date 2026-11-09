@@ -65,37 +65,37 @@ PLAN_DETAILS = {
     "plan_49": {
         "price_str": "₹49",
         "amount": 49,
-        "name": "🫦 𝐂𝐇*𝐋𝐃-𝐏*𝐑𝐍🫦💦",
+        "name": "CH-PRN Pack",
         "channel_invite_link": "https://t.me/+bbHEYkg9NwEzMGU1",
     },
     "plan_69": {
         "price_str": "₹69",
         "amount": 69,
-        "name": "🫦 𝐑𝐏𝐄-𝐏*𝐑𝐍🫦💦",
+        "name": "RPE-PRN Pack",
         "channel_invite_link": "https://t.me/+bbHEYkg9NwEzMGU1",
     },
     "plan_79": {
         "price_str": "₹79",
         "amount": 79,
-        "name": "🫦 𝐃𝐄𝐒𝐈 𝐁𝐇𝐀𝐁𝐇𝐈🫦💦",
+        "name": "DESI BHABHI Pack",
         "channel_invite_link": "https://t.me/+bbHEYkg9NwEzMGU1",
     },
     "plan_99": {
         "price_str": "₹99",
         "amount": 99,
-        "name": "🫦 𝐈𝐍𝐒𝐓𝐀𝐆𝐑𝐀𝐌 𝐒𝐓𝐀𝐑🫦💦",
+        "name": "INSTAGRAM STAR Pack",
         "channel_invite_link": "https://t.me/+bbHEYkg9NwEzMGU1",
     },
     "plan_149": {
         "price_str": "₹149",
         "amount": 149,
-        "name": "🫦 𝐓𝐄𝐄𝐍 𝐈𝐍𝐃𝐈𝐀𝐍🫦💦",
+        "name": "TEEN INDIAN Pack",
         "channel_invite_link": "https://t.me/+bbHEYkg9NwEzMGU1",
     },
     "plan_199": {
         "price_str": "₹199",
         "amount": 199,
-        "name": "🫦 𝐁𝐑𝐎𝐓𝐇𝐄𝐑-𝐒𝐈𝐒𝐓𝐄𝐑🫦💦",
+        "name": "BROTHER-SISTER Pack",
         "channel_invite_link": "https://t.me/+bbHEYkg9NwEzMGU1",
     },
 }
@@ -128,12 +128,12 @@ async def delete_qr_message(context: ContextTypes.DEFAULT_TYPE):
 
 def main_menu():
     keyboard = [
-        [InlineKeyboardButton("🟢 ₹49 — 🫦 𝐂𝐇*𝐋𝐃-𝐏*𝐑𝐍🫦💦", callback_data="plan_49")],
-        [InlineKeyboardButton("🔵 ₹69 — 🫦 𝐑𝐏𝐄-𝐏*𝐑𝐍🫦💦", callback_data="plan_69")],
-        [InlineKeyboardButton("🟣 ₹79 — 🫦 𝐃𝐄𝐒𝐈 𝐁𝐇𝐀𝐁𝐇𝐈🫦💦", callback_data="plan_79")],
-        [InlineKeyboardButton("🟠 ₹99 — 🫦 𝐈𝐍𝐒𝐓𝐀𝐆𝐑𝐀𝐌 𝐒𝐓𝐀𝐑🫦💦", callback_data="plan_99")],
-        [InlineKeyboardButton("🔥 ₹149 — 🫦 𝐓𝐄𝐄𝐍 𝐈𝐍𝐃𝐈𝐀𝐍🫦💦", callback_data="plan_149")],
-        [InlineKeyboardButton("👑 ₹199 — 🫦 𝐁𝐑𝐎𝐓𝐇𝐄𝐑-𝐒𝐈𝐒𝐓𝐄𝐑🫦💦", callback_data="plan_199")],
+        [InlineKeyboardButton("🟢 ₹49 — CH-PRN Pack", callback_data="plan_49")],
+        [InlineKeyboardButton("🔵 ₹69 — RPE-PRN Pack", callback_data="plan_69")],
+        [InlineKeyboardButton("🟣 ₹79 — DESI BHABHI Pack", callback_data="plan_79")],
+        [InlineKeyboardButton("🟠 ₹99 — INSTAGRAM STAR Pack", callback_data="plan_99")],
+        [InlineKeyboardButton("🔥 ₹149 — TEEN INDIAN Pack", callback_data="plan_149")],
+        [InlineKeyboardButton("👑 ₹199 — BROTHER-SISTER Pack", callback_data="plan_199")],
         [InlineKeyboardButton("🎁 Demo", callback_data="demo")],
     ]
     return InlineKeyboardMarkup(keyboard)
@@ -259,52 +259,46 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if query.data.startswith("plan_"):
         if query.data not in PLAN_DETAILS:
-            await context.bot.send_message(chat_id=user_chat_id, text="❌ Invalid plan.")
             return ConversationHandler.END
 
         plan_info = PLAN_DETAILS[query.data]
         context.user_data["selected_plan"] = query.data
 
-        try:
-            amount = plan_info["amount"]
-            
-            # 🔒 LOCKED UPI STRING (Amount & Payee Locked)
-            upi_uri = f"upi://pay?pa={MY_UPI_ID}&pn={MY_UPI_NAME}&am={amount}&cu=INR"
-            
-            # Generate dynamic QR code image URL for locked amount
-            qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={requests.utils.quote(upi_uri)}"
+        amount = plan_info["amount"]
+        
+        # 🔒 LOCKED UPI STRING (Amount & Payee Locked)
+        upi_uri = f"upi://pay?pa={MY_UPI_ID}&pn={MY_UPI_NAME}&am={amount}&cu=INR"
+        
+        # Generate dynamic QR code image URL for locked amount
+        qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={requests.utils.quote(upi_uri)}"
 
-            # Send Locked QR code image with exact amount and 2 minutes expiry notice
-            sent_msg = await context.bot.send_photo(
-                chat_id=user_chat_id,
-                photo=qr_api_url,
-                caption=(
-                    f"🔒 **Locked Payment QR for {plan_info['name']}**\n\n"
-                    f"📌 **Amount Locked:** `{plan_info['price_str']}`\n"
-                    f"📌 **UPI ID:** `{MY_UPI_ID}`\n"
-                    f"📌 **Name:** `{MY_UPI_NAME}`\n\n"
-                    f"⏱ **यह QR Code केवल 2 मिनट के लिए मान्य है!**\n"
-                    f"1️⃣ इस QR को स्कैन करके पेमेंट करें।\n"
-                    f"2️⃣ Payment complete करने के बाद **पूरा payment screenshot** यहाँ भेजें।"
-                ),
-                parse_mode="Markdown",
-                reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("🔙 Back to Menu", callback_data="back_main")]
-                ])
-            )
+        # Send Locked QR code image with exact amount and 2 minutes expiry notice
+        sent_msg = await context.bot.send_photo(
+            chat_id=user_chat_id,
+            photo=qr_api_url,
+            caption=(
+                f"🔒 **Locked Payment QR for {plan_info['name']}**\n\n"
+                f"📌 **Amount Locked:** `{plan_info['price_str']}`\n"
+                f"📌 **UPI ID:** `{MY_UPI_ID}`\n"
+                f"📌 **Name:** `{MY_UPI_NAME}`\n\n"
+                f"⏱ **यह QR Code केवल 2 मिनट के लिए मान्य है!**\n"
+                f"1️⃣ इस QR को स्कैन करके पेमेंट करें।\n"
+                f"2️⃣ Payment complete करने के बाद **पूरा payment screenshot** यहाँ भेजें।"
+            ),
+            parse_mode="Markdown",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 Back to Menu", callback_data="back_main")]
+            ])
+        )
 
-            # Schedule job to auto-delete this QR message after 120 seconds (2 minutes)
-            context.job_queue.run_once(
-                delete_qr_message,
-                when=120,
-                data={"chat_id": user_chat_id, "message_id": sent_msg.message_id}
-            )
+        # Schedule job to auto-delete this QR message after 120 seconds (2 minutes)
+        context.job_queue.run_once(
+            delete_qr_message,
+            when=120,
+            data={"chat_id": user_chat_id, "message_id": sent_msg.message_id}
+        )
 
-            return WAITING_FOR_SCREENSHOT
-        except Exception as e:
-            print("PLAN ERROR:", e)
-            await context.bot.send_message(chat_id=user_chat_id, text="❌ QR generate करने में समस्या हुई। कृपया दोबारा कोशिश करें।")
-            return ConversationHandler.END
+        return WAITING_FOR_SCREENSHOT
 
     if query.data == "back_main":
         context.user_data.clear()
