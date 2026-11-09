@@ -109,6 +109,20 @@ WAITING_FOR_SCREENSHOT = 1
 
 
 # =========================================================
+# AUTO-DELETE QR JOB FUNCTION
+# =========================================================
+
+async def delete_qr_message(context: ContextTypes.DEFAULT_TYPE):
+    job_data = context.job.data
+    chat_id = job_data["chat_id"]
+    message_id = job_data["message_id"]
+    try:
+        await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+    except Exception as e:
+        print("Error auto-deleting QR message:", e)
+
+
+# =========================================================
 # MAIN MENU
 # =========================================================
 
@@ -256,8 +270,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # Generate dynamic QR code image URL for locked amount
             qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={requests.utils.quote(upi_uri)}"
 
-            # Send Locked QR code image with exact amount
-            await context.bot.send_photo(
+            # Send Locked QR code image with exact amount and 2 minutes expiry notice
+            sent_msg = await context.bot.send_photo(
                 chat_id=user_chat_id,
                 photo=qr_api_url,
                 caption=(
@@ -265,7 +279,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     f"📌 **Amount Locked:** `{plan_info['price_str']}`\n"
                     f"📌 **UPI ID:** `{MY_UPI_ID}`\n"
                     f"📌 **Name:** `{MY_UPI_NAME}`\n\n"
-                    f"1️⃣ इस QR को स्कैन करें (अमाउंट पहले से लॉक है)।\n"
+                    f"⏱ **यह QR Code केवल 2 मिनट के लिए मान्य है!**\n"
+                    f"1️⃣ इस QR को स्कैन करके पेमेंट करें।\n"
                     f"2️⃣ Payment complete करने के बाद **पूरा payment screenshot** यहाँ भेजें।"
                 ),
                 parse_mode="Markdown",
@@ -273,6 +288,14 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     [InlineKeyboardButton("🔙 Back to Menu", callback_data="back_main")]
                 ])
             )
+
+            # Schedule job to auto-delete this QR message after 120 seconds (2 minutes)
+            context.job_queue.run_once(
+                delete_qr_message,
+                when=120,
+                data={"chat_id": user_chat_id, "message_id": sent_msg.message_id}
+            )
+
             return WAITING_FOR_SCREENSHOT
         except Exception as e:
             print("PLAN ERROR:", e)
@@ -399,7 +422,7 @@ def main():
     app.add_handler(conv_handler)
     app.add_handler(CallbackQueryHandler(button_handler))
 
-    print("🚀 Bot is running with Dynamic Locked QR & Concurrent Engine...")
+    print("🚀 Bot is running with 2-Minute Auto-Delete QR & Concurrent Engine...")
     
     app.run_polling(
         drop_pending_updates=True,
